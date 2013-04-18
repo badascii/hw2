@@ -7,9 +7,14 @@ class MoviesController < ApplicationController
   end
 
   def index
-	@title_header = (params[:sort] == 'title' && 'hilite') || ''
-	@release_date_header = (params[:sort] == 'release_date' && 'hilite') || ''
-	@movies = Movie.order(params[:sort])	
+	@sort = params[:sort]
+	@all_ratings = Movie.ratings.keys
+	@checked_ratings = (params[:ratings].present? ? params[:ratings] : Movie.ratings)
+	
+	@title_header = (@sort == 'title' && 'hilite') || ''
+	@release_date_header = (@sort == 'release_date' && 'hilite') || '' 
+
+	@movies = Movie.order(@sort).where(:rating => @checked_ratings.keys)
   end
 
   def new
